@@ -1,0 +1,10 @@
+## git-ignore rules
+
+node_modules
+coverage
+dist
+npm-debug.log
+test_results
+
+# MAC DS_Store
+.DS_Store

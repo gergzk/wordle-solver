@@ -1,0 +1,87 @@
+{
+    "linterOptions": {
+        "exclude": [
+            "src/**/*.test.ts",
+            "src/mocks/*"
+        ]
+    },
+    "rules": {
+        "await-promise": true,
+        "ban-comma-operator": true,
+        "no-reference": true,
+        "only-arrow-functions": [
+            true,
+            "allow-declarations"
+        ],
+        "no-namespace": [
+            true,
+            "allow-declarations"
+        ],
+        "class-name": true,
+        "curly": true,
+        "eofline": true,
+        "forin": false,
+        "indent": [
+            true,
+            "spaces"
+        ],
+        "interface-name": true,
+        "label-position": true,
+        "no-arg": true,
+        "no-conditional-assignment": true,
+        "no-inferrable-types": [true, "ignore-params"],
+        "no-magic-numbers": [true, 0, 1, 12, 100],
+        "no-var-keyword": true,
+        "no-console": [
+            true,
+            "debug",
+            "info",
+            "time",
+            "timeEnd",
+            "trace"
+        ],
+        "no-construct": true,
+        "no-debugger": true,
+        "no-duplicate-super": true,
+        "no-duplicate-imports": true,
+        "no-duplicate-switch-case": true,
+        "no-duplicate-variable": true,
+        "no-empty": false,
+        "no-eval": true,
+        "no-for-in-array": true,
+        "no-invalid-this": true,
+        "no-shadowed-variable": true,
+        "no-string-throw": true,
+        "no-trailing-whitespace": true,
+        "no-unused-expression": true,
+        "no-use-before-declare": true,
+        "one-line": [
+            true,
+            "check-open-brace",
+            "check-whitespace"
+        ],
+        "promise-function-async": true,
+        "quotemark": [
+            true,
+            "single"
+        ],
+        "radix": true,
+        "semicolon": [
+            true,
+            "always",
+            "ignore-interfaces"
+        ],
+        "triple-equals": [
+            true
+        ],
+        "variable-name": false,
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-decl",
+            "check-operator",
+            "check-separator",
+            "check-type"
+        ]
+    }
+}

@@ -1,0 +1,86 @@
+{
+  "name": "boggle-solver",
+  "version": "1.0.0",
+  "description": "Finds words on a boggle board. You can provide your dictionary and board, though default 4x4 and english words are provided.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run lint && npm run compile && npm run test",
+    "compile": "tsc",
+    "lint": "tslint --project .",
+    "test": "jest",
+    "start": "tsc --watch",
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
+    "coverage": "coverage\\lcov-report\\index.html",
+    "define": "node ./dist/boggleDefine.js",
+    "solve": "cls && node ./dist/boggleSample.js",
+    "simulate": "cls && node ./dist/boggleStats.js"
+  },
+  "files": [
+    "dist/**",
+    "!**/*.test.*",
+    "!dist/src/mocks/**"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gergzk/boggle-solver.git"
+  },
+  "author": "Gergely Kota",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "jest": "^24.7.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.5"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "src/.*\\.test\\.ts",
+    "testPathIgnorePatterns": [
+      "\\node_modules\\",
+      "\\dist\\",
+      "\\mocks\\"
+    ],
+    "modulePaths": [
+      "<rootDir>/src"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    },
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "coveragePathIgnorePatterns": [
+      "src/mocks/*"
+    ],
+    "coverageReporters": [
+      "json",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    },
+    "testURL": "http://localhost"
+  },
+  "dependencies": {
+    "@types/node": "^17.0.5"
+  }
+}
