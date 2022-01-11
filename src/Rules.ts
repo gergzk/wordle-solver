@@ -66,7 +66,12 @@ export class Rules {
     }
     static placesContains(p: Place, places: Place[]): boolean {
         let ret = false;
-        places.forEach(place => ret = ret || place.index === p.index);
+        places.forEach(place => { 
+            ret = ret || place.index === p.index
+            if (place.index === p.index && place.char !== p.char) {
+                throw new Error(`Incompatible chars found at index ${place.index}`);
+            }
+        });
         return ret;
     }
 }

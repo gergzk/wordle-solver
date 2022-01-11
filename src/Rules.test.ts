@@ -104,6 +104,21 @@ describe("Rules", () => {
                     expect(Rules.mergeArrays(a1, a2)).toStrictEqual("hat".split(""));
                 });
             });
+            describe("placesContains", () => {
+                const places = [{ index: 1, char: "g" }, { index: 3, char: "x" }];
+                test("contains", () => {
+                    const p = { index: 3, char: "x" };
+                    expect(Rules.placesContains(p, places)).toBe(true);
+                });
+                test("not contains", () => {
+                    const p = { index: 2, char: "a" };
+                    expect(Rules.placesContains(p, places)).toBe(false);
+                });
+                test("collision with mismatching char throws", () => {
+                    const p = { index: 3, char: "a" };
+                    expect(() => Rules.placesContains(p, places)).toThrowError();
+                })
+            });
         });
     });
 });
