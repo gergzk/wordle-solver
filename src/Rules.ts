@@ -48,7 +48,6 @@ export class Rules {
         );
         return ret;
     }
-    /*
     mergeRules(rules: Rules): Rules {
         if (this.length !== rules.length) {
             throw new Error("Mismatched length rules encountered");
@@ -56,8 +55,8 @@ export class Rules {
         // merge the next rule object to create a sum of the argument and this Rules
         const contains = Rules.mergeArrays(this.contains, rules.contains);
         const notContains = Rules.mergeArrays(this.notContains, rules.notContains);
-        const placesToAdd = rules.places.filter(e => )
-        const places = this.places.map(p => p).concat()
+        const placesToAdd = rules.places.filter(e => !Rules.placesContains(e, this.places));
+        const places = this.places.map(p => p).concat(placesToAdd);
         return new Rules(this.length, contains, notContains, places);
     }
     static mergeArrays(arr1: string[], arr2: string[]): string[] {
@@ -65,5 +64,9 @@ export class Rules {
         arr2.filter(s => arr1.indexOf(s) < 0).forEach(s => arr.push(s));
         return arr;
     }
-    */
+    static placesContains(p: Place, places: Place[]): boolean {
+        let ret = false;
+        places.forEach(place => ret = ret || place.index === p.index);
+        return ret;
+    }
 }

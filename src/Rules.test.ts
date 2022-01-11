@@ -64,6 +64,27 @@ describe("Rules", () => {
                 })
             });
         });
-
+        describe("true", () => {
+            test("Match for rNone", () => {
+                ["hat", "urn"].forEach(w => {
+                    expect(rNone.matches(w)).toBe(true);
+                })
+            });
+            test("Match for rSome", () => {
+                ["rut", "pot"].forEach(w => {
+                    expect(rSome.matches(w)).toBe(true);
+                })
+            });
+            test("Match for rSpot", () => {
+                ["rap", "max"].forEach(w => {
+                    expect(rSpot.matches(w)).toBe(true);
+                })
+            });
+            test("Match for rSpotAndSome", () => {
+                ["tag", "bat"].forEach(w => {
+                    expect(rSpotAndSome.matches(w)).toBe(true);
+                })
+            });
+        });
     });
 });
