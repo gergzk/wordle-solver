@@ -14,7 +14,7 @@ export class Rules {
 
     static create(guess: string, actual: string): Rules {
         if (guess.length !== actual.length) {
-            throw new Error("Incompatible string lengths");
+            throw new Error(`Incompatible string lengths: ${guess}, ${actual}`);
         }
         const g = guess.split("");
         const a = actual.split("");

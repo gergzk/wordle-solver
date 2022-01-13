@@ -2,8 +2,8 @@ import { getLegalWords } from "./Words";
 import { Rules } from "./src/Rules";
 
 interface Entry {
-    max: number;
-    min: number;
+    min: number,
+    max: number,
     average: number;
 }
 // for every legal word, see how many words are left in the second round against every goal word

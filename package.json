@@ -14,6 +14,7 @@
     "match": "node ./dist/wordleMatches.js",
     "guess": "node ./dist/wordleGuess.js",
     "stats": "node ./dist/wordleStats.js",
+    "list": "node ./dist/wordleAllStats.js",
     "simulate": "cls && node ./dist/boggleStats.js"
   },
   "files": [
