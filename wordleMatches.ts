@@ -11,4 +11,5 @@ console.log(`Loaded ${words.length} words`);
 const places = placesAsString.split("").map((c,i) => { return { index: i, char: c }}).filter(e => e.char != ".");
 const rules = new Rules(5, contains, notContains, places);
 const matches = words.filter(word => rules.matches(word));
+matches.sort();
 console.log(`Matches ${matches.length} words: ${matches.join(", ")}`);
