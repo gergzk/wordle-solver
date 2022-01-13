@@ -8,6 +8,11 @@ interface Entry {
 }
 // for every legal word, see how many words are left in the second round against every goal word
 
+const matchList: { [x: string ]: number} = {};
+let listSize = 0;
+let cacheHits = 0;
+
+
 const words = getLegalWords(5);
 const verbose = process.argv[2] === "verbose";
 let bestResult: Entry = {
@@ -15,7 +20,7 @@ let bestResult: Entry = {
     max: 0, 
     average: words.length,
 }
-const guesses = verbose ? words : ([process.argv[2]] || words);
+const guesses = verbose ? words : (process.argv[2] ? [process.argv[2]] : words);
 guesses.forEach((guessWord, i) => {
     // for every word that is not myself, how many words are left?
     const e: Entry = {
@@ -38,10 +43,24 @@ guesses.forEach((guessWord, i) => {
     }
     if (e.average < bestResult.average) {
         bestResult = e;
-        console.log(`${i}. ${guessWord} improved average to ${e.average}`);
+        console.log(`${i}. ${guessWord} improved average to ${e.average}. ${verbose ? `(Stats: cache hits ${cacheHits} vs misses ${listSize})`: ""}`);
     }
 });
 
 function getMatches(rules: Rules) {
-    return words.filter(w => rules.matches(w)).length;
+    const hash = hashRule(rules);
+    if (matchList[hash] === undefined) {
+        listSize++;
+        matchList[hash] = words.filter(w => rules.matches(w)).length
+    } else {
+        cacheHits++;
+    }
+    return matchList[hash];
+}
+
+function hashRule(rules: Rules): string {
+    rules.contains.sort();
+    rules.notContains.sort();
+    rules.places.sort((e1,e2) => e1.index-e2.index);
+    return rules.contains.join() + "," + rules.notContains.join() + "," + rules.places.map(e => e.index + e.char)
 }
