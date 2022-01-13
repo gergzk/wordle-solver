@@ -33,8 +33,11 @@ export class Rules {
     matches(testString: string): boolean {
         // check all three tests
         const testAsArray = testString.split("");
-        const found = testAsArray.filter(c => this.contains.indexOf(c) >= 0);
-        if (found.length !== this.contains.length) {
+        let allFound = true;
+        this.contains.forEach(c => {
+            allFound = allFound && testAsArray.indexOf(c) >= 0
+        });
+        if (!allFound) {
             return false;
         }
         const notFound = testAsArray.filter(c => this.notContains.indexOf(c) >= 0);

@@ -85,6 +85,10 @@ describe("Rules", () => {
                     expect(rSpotAndSome.matches(w)).toBe(true);
                 })
             });
+            test("Real case", () => {
+                const r = Rules.create("tears", "royal");
+                expect(r.matches("naiad")).toBe(false);
+            })
         });
     });
     describe("mergeRules", () => {
