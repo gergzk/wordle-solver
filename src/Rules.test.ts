@@ -87,9 +87,39 @@ describe("Rules", () => {
             });
         });
     });
-    describe("merge", () => {
-        test.skip("Put merge tests here", () => {});
-        test.skip("Swap boggle stuff for wordle stuff - session with updating rules", () => {});
+    describe("mergeRules", () => {
+        const rEmpty = new Rules(3, [], [], []);
+        const rSome = new Rules(3, ["a"], ["z"], []);
+        const rSomeWithPlaces = new Rules(3, ["a"], ["z"], [{ index: 1, char: "a" }]);
+        const rSomeOtherWithPlaces = new Rules(3, ["b"], ["y"], [{ index: 2, char: "b" }]);
+        const rTooShort = new Rules(2, [], [], []);
+        test("Add to empty results in self", () => {
+            const r = rEmpty.mergeRules(rSome);
+            expect(r.contains).toStrictEqual(rSome.contains);
+            expect(r.notContains).toStrictEqual(rSome.notContains);
+            expect(r.places).toStrictEqual(rSome.places);
+        });
+        test("Add with places to empty results in self", () => {
+            const r = rEmpty.mergeRules(rSomeWithPlaces);
+            expect(r.contains).toStrictEqual(rSomeWithPlaces.contains);
+            expect(r.notContains).toStrictEqual(rSomeWithPlaces.notContains);
+            expect(r.places).toStrictEqual(rSomeWithPlaces.places);
+        });
+        test("Add to self results in self", () => {
+            const r = rSome.mergeRules(rSome);
+            expect(r.contains).toStrictEqual(rSome.contains);
+            expect(r.notContains).toStrictEqual(rSome.notContains);
+            expect(r.places).toStrictEqual(rSome.places);
+        });
+        test("Mismatched length throws", () => {
+            expect(() => rEmpty.mergeRules(rTooShort)).toThrowError();
+        });
+        test("Two with all fields merges right", () => {
+            const r = rSomeWithPlaces.mergeRules(rSomeOtherWithPlaces);
+            expect(r.contains).toStrictEqual(["a", "b"]);
+            expect(r.notContains).toStrictEqual(["z", "y"]);
+            expect(r.places).toStrictEqual([{ index: 1, char: "a" }, { index: 2, char: "b" }]);
+        });
     });
     describe("statics", () => {
         describe("mergeArrays", () => {
