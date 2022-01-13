@@ -13,6 +13,7 @@
     "coverage": "coverage\\lcov-report\\index.html",
     "match": "node ./dist/wordleMatches.js",
     "guess": "node ./dist/wordleGuess.js",
+    "stats": "node ./dist/wordleStats.js",
     "simulate": "cls && node ./dist/boggleStats.js"
   },
   "files": [
