@@ -11,15 +11,23 @@ const matchList: { [x: string ]: number} = {};
 const entries: Entry[] = [];
 const legalWords = getLegalWords();
 const legalGuesses = getLegalGuesses();
-const guessTestSubsetCount = process.argv[2] ? Math.min(Number.parseInt(process.argv[2]), legalGuesses.length) : legalGuesses.length;
-console.log(`Using ${guessTestSubsetCount} words`)
+const tsOutput = process.argv[2] === "ts" || process.argv[3] === "ts";
+const guessTestSubsetCount = process.argv[2] && process.argv[2] !== "ts" ? Math.min(Number.parseInt(process.argv[2]), legalGuesses.length) : legalGuesses.length;
+if (!tsOutput) {
+    console.log(`Using ${guessTestSubsetCount} words`);
+}
 // grab subset of random words from the legal guess list, and see which guess produces best reduction
 const guessTestSubset: string[] = [];
 while (guessTestSubset.length < guessTestSubsetCount) {
-    const word = legalGuesses.splice(Math.floor(legalWords.length * Math.random()), 1)[0];
+    const word = legalGuesses.splice(Math.floor(legalGuesses.length * Math.random()), 1)[0];
+    if (word === undefined) {
+        throw new Error(`Whoops! Undefined found at ${guessTestSubset.length}`);
+    }
     guessTestSubset.push(word);
 }
-console.log(`Running stats on ${guessTestSubsetCount} of ${legalWords.length} words`);
+if (!tsOutput) {
+    console.log(`Running stats on ${guessTestSubsetCount} of ${legalWords.length} words`);
+}
 guessTestSubset.forEach((guess, i) => {
     const e: Entry = {
         word: guess,
@@ -34,7 +42,14 @@ guessTestSubset.forEach((guess, i) => {
     entries.push(e);
 });
 entries.sort((e1, e2) => e1.avg - e2.avg);
-entries.forEach(e => console.log(e));
+if (tsOutput) {
+    console.log("export const firstGuesses = {");
+    entries.forEach(e => console.log(`\t${e.word}: ${e.avg},`));
+    console.log("};");
+} else {
+    entries.forEach(e => console.log(e));
+}
+
 
 function getMatches(rules: Rules) {
     const hash = hashRule(rules);
