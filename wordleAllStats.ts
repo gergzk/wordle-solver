@@ -10,13 +10,14 @@ const matchList: { [x: string ]: number} = {};
 
 const entries: Entry[] = [];
 const words = getLegalWords(5);
-const subset = process.argv[2] ? Number.parseInt(process.argv[2]) : words.length;
+const subset = process.argv[2] ? Math.min(Number.parseInt(process.argv[2]), words.length) : words.length;
 // grab subset random words from the list
 const wordSubset: string[] = [];
 while (wordSubset.length < subset) {
     const word = words.splice(Math.floor(words.length * Math.random()), 1)[0];
     wordSubset.push(word);
 }
+console.log(`Running stats on ${subset} of ${words.length} words`);
 wordSubset.forEach((guess, i) => {
     const e: Entry = {
         word: guess,
