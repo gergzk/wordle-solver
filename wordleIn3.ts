@@ -1,13 +1,11 @@
 // this script used to find out how often a 1st guess will narrow down to a single legal word by 3rd round
-import { getLegalWords } from "./Words";
+import { getLegalGuesses, getLegalWords } from "./Words";
 import { firstGuesses } from "./firstGuesses";
 import { Rules } from "./src/Rules";
 
 const matchList: { [x: string]: number } = {};
 const legalWords = getLegalWords();
-const legalGuesses = Object.keys(firstGuesses);
-// reformat the legalGuesses to be more likely in a useful order
-
+const legalGuesses = getLegalGuesses();
 
 function getMatches(rules: Rules) {
     const hash = hashRule(rules);
@@ -50,19 +48,29 @@ wordsToTry.forEach(wordToTry => {
     let runningCount = 0;
     legalWords.forEach((legalWord) => {
         const rule1 = Rules.create(wordToTry, legalWord);
-        let bestGuess = legalGuesses.length;
-        legalGuesses.forEach((legalGuess) => {
-            if (bestGuess > 1) {
-                const rule2 = Rules.create(legalGuess, legalWord);
-                const finalRule = rule1.mergeRules(rule2);
-                const matches = getMatches(finalRule);
-                bestGuess = Math.min(bestGuess, matches);
-            }
-        });
-        runningCount += bestGuess;
+        // and then what is the 2nd word? 
+        const nextWord = findBestWord(wordToTry, rule1);
+        const rule2 = Rules.create(nextWord, legalWord);
+        const rules = rule1.mergeRules(rule2);        
+        runningCount += getMatches(rules);
     });
     entries.push({ word: wordToTry, guessesLeft: runningCount});
 });
 
 entries.sort((e1,e2) => e1.guessesLeft - e2.guessesLeft);
 entries.forEach(e => console.log(`${e.word}: ${1.0*legalWords.length/e.guessesLeft}`));
+
+function findBestWord(firstWord: string, resultingRule: Rules): string {
+    // strategy is to pick another high-match word that shares matched letters
+    const validChoices = legalGuesses.filter(guess => {
+        const isMatch = resultingRule.matches(guess);
+        if (!isMatch) { return false; }
+        const counts: { [x: string]: boolean } = {};
+        guess.split("").forEach(letter => { counts[letter] = true; });
+        return Object.keys(counts).length === 5;
+    });
+    // then pick the one earliest on the legal list
+    validChoices.sort((a,b) => (firstGuesses as any)[a] - (firstGuesses as any)[b]);
+    console.log(`${firstWord}: ${validChoices.length}, returning ${validChoices[0]}`);
+    return validChoices[0];
+}
