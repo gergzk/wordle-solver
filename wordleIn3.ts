@@ -1,11 +1,13 @@
 // this script used to find out how often a 1st guess will narrow down to a single legal word by 3rd round
-import { getLegalGuesses, getLegalWords } from "./Words";
+import { getLegalWords } from "./Words";
 import { firstGuesses } from "./firstGuesses";
 import { Rules } from "./src/Rules";
 
 const matchList: { [x: string]: number } = {};
 const legalWords = getLegalWords();
-const legalGuesses = getLegalGuesses();
+const legalGuesses = Object.keys(firstGuesses);
+// reformat the legalGuesses to be more likely in a useful order
+
 
 function getMatches(rules: Rules) {
     const hash = hashRule(rules);
@@ -46,14 +48,18 @@ interface Entry {
 const entries: Entry[] = [];
 wordsToTry.forEach(wordToTry => {
     let runningCount = 0;
-    legalWords.forEach(legalWord => {
+    legalWords.forEach((legalWord) => {
         const rule1 = Rules.create(wordToTry, legalWord);
-        legalGuesses.forEach(legalGuess => {
-            const rule2 = Rules.create(legalGuess, legalWord);
-            const finalRule = rule1.mergeRules(rule2);
-            const matches = getMatches(finalRule);
-            runningCount += matches;
+        let bestGuess = legalGuesses.length;
+        legalGuesses.forEach((legalGuess) => {
+            if (bestGuess > 1) {
+                const rule2 = Rules.create(legalGuess, legalWord);
+                const finalRule = rule1.mergeRules(rule2);
+                const matches = getMatches(finalRule);
+                bestGuess = Math.min(bestGuess, matches);
+            }
         });
+        runningCount += bestGuess;
     });
     entries.push({ word: wordToTry, guessesLeft: runningCount});
 });
