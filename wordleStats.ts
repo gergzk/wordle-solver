@@ -1,4 +1,4 @@
-import { getLegalWords } from "./Words";
+import { getLegalGuesses, getLegalWords } from "./Words";
 import { Rules } from "./src/Rules";
 
 interface Entry {
@@ -13,14 +13,14 @@ let listSize = 0;
 let cacheHits = 0;
 
 
-const words = getLegalWords(5);
+const words = getLegalWords();
 const verbose = process.argv[2] === "verbose";
 let bestResult: Entry = {
     min: 0,
     max: 0, 
     average: words.length,
 }
-const guesses = verbose ? words : (process.argv[2] ? [process.argv[2]] : words);
+const guesses = verbose ? getLegalGuesses() : (process.argv[2] ? [process.argv[2]] : getLegalGuesses());
 guesses.forEach((guessWord, i) => {
     // for every word that is not myself, how many words are left?
     const e: Entry = {

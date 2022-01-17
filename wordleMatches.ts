@@ -4,7 +4,7 @@ import { Rules } from "./src/Rules";
 const contains = process.argv[2]?.split("") || [];
 const notContains = process.argv[3]?.split("") || [];
 const placesAsString = process.argv[4] || ".....";
-const words = getLegalWords(5);
+const words = getLegalWords();
 console.log(`Loaded ${words.length} words`);
 //console.log(`Read args ${contains}, ${notContains}, ${placesAsString}`);
 

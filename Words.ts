@@ -1,7 +1,11 @@
-import { dictionary } from "./dictionary";
+import { legalGuess } from "./legalGuesses";
+import { legalWordles } from "./wordleWords";
 
-export function getLegalWords(length: number = 5) {
-    const wordArray: string[] = Object.keys(dictionary);
-    return wordArray.filter(word => word.length === length && word.indexOf("-") < 0);
+export function getLegalWords() {
+    return legalWordles;
+}
+
+export function getLegalGuesses() {
+    return legalGuess;
 }
 
