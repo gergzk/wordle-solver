@@ -16,6 +16,7 @@
     "stats": "node ./dist/wordleStats.js",
     "list": "node ./dist/wordleAllStats.js",
     "generateFirstGuesses": "npm run --silent list ts > firstGuesses.ts",
+    "compute3": "node ./dist/wordleIn3.js",
     "simulate": "cls && node ./dist/boggleStats.js"
   },
   "files": [
