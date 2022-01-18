@@ -1,5 +1,5 @@
 import { legalGuess } from "./legalGuesses";
-import { legalWordles } from "./wordleWords";
+import { legalWordles } from "./legalWords";
 
 export function getLegalWords() {
     return legalWordles;
