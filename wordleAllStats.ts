@@ -1,16 +1,19 @@
 import { getLegalWords, getLegalGuesses } from "./Words";
-import { Rules } from "./src/Rules";
+import { Rule } from "./src/Rule";
+import { MatchCache } from "./src/MatchCache";
 
 interface Entry {
     word: string;
     avg: number;
 }
 
-const matchList: { [x: string ]: number} = {};
-
+// this file generates the number of possible words left after each first guess
+// ts param outputs a valid ts file
+// npm run list [nRandomWords] [ts]
 const entries: Entry[] = [];
 const legalWords = getLegalWords();
 const legalGuesses = getLegalGuesses();
+const cacheMatch = new MatchCache(legalWords);
 const tsOutput = process.argv[2] === "ts" || process.argv[3] === "ts";
 const guessTestSubsetCount = process.argv[2] && process.argv[2] !== "ts" ? Math.min(Number.parseInt(process.argv[2]), legalGuesses.length) : legalGuesses.length;
 if (!tsOutput) {
@@ -26,7 +29,7 @@ while (guessTestSubset.length < guessTestSubsetCount) {
     guessTestSubset.push(word);
 }
 if (!tsOutput) {
-    console.log(`Running stats on ${guessTestSubsetCount} of ${legalWords.length} words`);
+    console.log(`Running stats on ${guessTestSubsetCount} of ${legalGuesses.length} words`);
 }
 guessTestSubset.forEach((guess, i) => {
     const e: Entry = {
@@ -34,8 +37,8 @@ guessTestSubset.forEach((guess, i) => {
         avg: 0,
     };
     legalWords.forEach(goal => {
-        const r = Rules.create(guess, goal);
-        const matches = getMatches(r);
+        const r = Rule.create(guess, goal);
+        const matches = cacheMatch.matchCount(r);
         e.avg += matches;
     });
     e.avg = Math.round(e.avg / legalWords.length);
@@ -50,18 +53,3 @@ if (tsOutput) {
     entries.forEach(e => console.log(e));
 }
 
-
-function getMatches(rules: Rules) {
-    const hash = hashRule(rules);
-    if (matchList[hash] === undefined) {
-        matchList[hash] = legalWords.filter(w => rules.matches(w)).length
-    }
-    return matchList[hash];
-}
-
-function hashRule(rules: Rules): string {
-    rules.contains.sort();
-    rules.notContains.sort();
-    rules.places.sort((e1,e2) => e1.index-e2.index);
-    return rules.contains.join() + "," + rules.notContains.join() + "," + rules.places.map(e => e.index + e.char)
-}
