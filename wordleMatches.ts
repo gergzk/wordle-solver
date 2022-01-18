@@ -1,6 +1,8 @@
 import { getLegalWords } from "./Words";
 import { Rule } from "./src/Rule";
 
+// this file tells you what words match a Rule
+// npm run match (contained letters) (not contained letters) (layout, eg: ..r.s) (not at position, eg: a:2,c:3,...)
 const contains = process.argv[2]?.split("") || [];
 const notContains = process.argv[3]?.split("") || [];
 const placesAsString = process.argv[4] || ".....";
