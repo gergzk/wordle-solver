@@ -1,1 +1,1 @@
-export { Rules } from "./src/Rules";
+export { Rule } from "./src/Rule";

@@ -1,26 +1,12 @@
 // this script used to find out how often a 1st guess will narrow down to a single legal word by 3rd round
 import { getLegalGuesses, getLegalWords } from "./Words";
 import { firstGuesses } from "./firstGuesses";
-import { Rules } from "./src/Rules";
+import { Rule } from "./src/Rule";
+import { MatchCache } from "./src/MatchCache";
 
-const matchList: { [x: string]: number } = {};
 const legalWords = getLegalWords();
 const legalGuesses = getLegalGuesses();
-
-function getMatches(rules: Rules) {
-    const hash = hashRule(rules);
-    if (matchList[hash] === undefined) {
-        matchList[hash] = legalWords.filter(w => rules.matches(w)).length;
-    }
-    return matchList[hash];
-}
-
-function hashRule(rules: Rules): string {
-    rules.contains.sort();
-    rules.notContains.sort();
-    rules.places.sort((e1,e2) => e1.index-e2.index);
-    return rules.contains.join() + "," + rules.notContains.join() + "," + rules.places.map(e => e.index + e.char)
-}
+const matchCache = new MatchCache(legalWords);
 
 // find the input in args[2] - it's either the top N choices, or a word
 let wordsToTry = [process.argv[2]];
@@ -47,12 +33,12 @@ const entries: Entry[] = [];
 wordsToTry.forEach(wordToTry => {
     let runningCount = 0;
     legalWords.forEach((legalWord) => {
-        const rule1 = Rules.create(wordToTry, legalWord);
+        const rule1 = Rule.create(wordToTry, legalWord);
         // and then what is the 2nd word? 
         const nextWord = findBestWord(wordToTry, rule1);
-        const rule2 = Rules.create(nextWord, legalWord);
-        const rules = rule1.mergeRules(rule2);        
-        runningCount += getMatches(rules);
+        const rule2 = Rule.create(nextWord, legalWord);
+        const rules = rule1.merge(rule2);        
+        runningCount += matchCache.matchCount(rules);
     });
     entries.push({ word: wordToTry, guessesLeft: runningCount});
 });
@@ -60,14 +46,17 @@ wordsToTry.forEach(wordToTry => {
 entries.sort((e1,e2) => e1.guessesLeft - e2.guessesLeft);
 entries.forEach(e => console.log(`${e.word}: ${1.0*legalWords.length/e.guessesLeft}`));
 
-function findBestWord(firstWord: string, resultingRule: Rules): string {
+function findBestWord(firstWord: string, resultingRule: Rule): string {
     // strategy is to pick another high-match word that shares matched letters
     const validChoices = legalGuesses.filter(guess => {
         const isMatch = resultingRule.matches(guess);
+        /*
         if (!isMatch) { return false; }
         const counts: { [x: string]: boolean } = {};
         guess.split("").forEach(letter => { counts[letter] = true; });
         return Object.keys(counts).length === 5;
+        */
+       return isMatch;
     });
     // then pick the one earliest on the legal list
     validChoices.sort((a,b) => (firstGuesses as any)[a] - (firstGuesses as any)[b]);
