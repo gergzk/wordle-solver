@@ -3,7 +3,7 @@ import { getLegalWords } from "./Words";
 import { firstGuesses } from "./firstGuesses";
 import { Rule } from "./src/Rule";
 import { MatchCache } from "./src/MatchCache";
-import { Strategy1 } from "./Strategy";
+import { MarisaStrategy } from "./Strategy";
 
 const legalWords = getLegalWords();
 const matchCache = new MatchCache(legalWords);
@@ -29,7 +29,7 @@ interface Entry {
     guessesLeft: number;
 };
 
-const s = new Strategy1();
+const s = new MarisaStrategy();
 
 const entries: Entry[] = [];
 wordsToTry.forEach(wordToTry => {
@@ -39,8 +39,10 @@ wordsToTry.forEach(wordToTry => {
         // and then what is the 2nd word? 
         const nextWord = s.secondGuess(wordToTry, rule1);
         const rule2 = Rule.create(nextWord, legalWord);
-        const rules = rule1.merge(rule2);        
-        runningCount += matchCache.matchCount(rules);
+        const rules = rule1.merge(rule2);
+        const counts = matchCache.matchCount(rules);
+        console.log(`${legalWord}: ${wordToTry} -> ${nextWord}. Left: ${counts}`);
+        runningCount += counts;
     });
     entries.push({ word: wordToTry, guessesLeft: runningCount});
 });
