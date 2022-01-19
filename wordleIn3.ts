@@ -1,11 +1,11 @@
 // this script used to find out how often a 1st guess will narrow down to a single legal word by 3rd round
-import { getLegalGuesses, getLegalWords } from "./Words";
+import { getLegalWords } from "./Words";
 import { firstGuesses } from "./firstGuesses";
 import { Rule } from "./src/Rule";
 import { MatchCache } from "./src/MatchCache";
+import { Strategy1 } from "./Strategy";
 
 const legalWords = getLegalWords();
-const legalGuesses = getLegalGuesses();
 const matchCache = new MatchCache(legalWords);
 
 // find the input in args[2] - it's either the top N choices, or a word
@@ -29,13 +29,15 @@ interface Entry {
     guessesLeft: number;
 };
 
+const s = new Strategy1();
+
 const entries: Entry[] = [];
 wordsToTry.forEach(wordToTry => {
     let runningCount = 0;
     legalWords.forEach((legalWord) => {
         const rule1 = Rule.create(wordToTry, legalWord);
         // and then what is the 2nd word? 
-        const nextWord = findBestWord(wordToTry, rule1);
+        const nextWord = s.secondGuess(wordToTry, rule1);
         const rule2 = Rule.create(nextWord, legalWord);
         const rules = rule1.merge(rule2);        
         runningCount += matchCache.matchCount(rules);
@@ -46,20 +48,3 @@ wordsToTry.forEach(wordToTry => {
 entries.sort((e1,e2) => e1.guessesLeft - e2.guessesLeft);
 entries.forEach(e => console.log(`${e.word}: ${1.0*legalWords.length/e.guessesLeft}`));
 
-function findBestWord(firstWord: string, resultingRule: Rule): string {
-    // strategy is to pick another high-match word that shares matched letters
-    const validChoices = legalGuesses.filter(guess => {
-        const isMatch = resultingRule.matches(guess);
-        /*
-        if (!isMatch) { return false; }
-        const counts: { [x: string]: boolean } = {};
-        guess.split("").forEach(letter => { counts[letter] = true; });
-        return Object.keys(counts).length === 5;
-        */
-       return isMatch;
-    });
-    // then pick the one earliest on the legal list
-    validChoices.sort((a,b) => (firstGuesses as any)[a] - (firstGuesses as any)[b]);
-    console.log(`${firstWord}: ${validChoices.length}, returning ${validChoices[0]}`);
-    return validChoices[0];
-}
