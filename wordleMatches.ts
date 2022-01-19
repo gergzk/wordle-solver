@@ -1,5 +1,6 @@
 import { getLegalWords } from "./Words";
 import { Rule } from "./src/Rule";
+import { firstGuesses } from "./firstGuesses";
 
 // this file tells you what words match a Rule
 // npm run match (contained letters) (not contained letters) (layout, eg: ..r.s) (not at position, eg: a:2,c:3,...)
@@ -25,5 +26,5 @@ notAtAsString.split(",").forEach(pair => {
     rule.removeFromPosition(i, c);
 });
 const matches = words.filter(word => rule.matches(word));
-matches.sort();
+matches.sort((a,b) => (firstGuesses as any)[a] - (firstGuesses as any)[b]);
 console.log(`Matches ${matches.length} words: ${matches.join(", ")}`);
