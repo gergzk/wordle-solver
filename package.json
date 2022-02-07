@@ -18,6 +18,7 @@
     "generateFirstGuesses": "npm run --silent list ts > firstGuesses.ts",
     "compute3": "node ./dist/wordleIn3.js",
     "deepCompute3": "node ./dist/wordleTryAllSeconds.js",
+    "whatsleft": "node ./dist/wordleWhatsLeft.js",
     "simulate": "cls && node ./dist/boggleStats.js"
   },
   "files": [
