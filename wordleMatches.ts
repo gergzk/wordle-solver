@@ -19,7 +19,7 @@ placesAsString.split("").forEach((c,i) => {
         rule.setPosition(i, c);
     }
 });
-notAtAsString.split(",").forEach(pair => {
+notAtAsString.length > 0 && notAtAsString.split(",").forEach(pair => {
     const ps = pair.split(":");
     const c = ps[0];
     const i = Number.parseInt(ps[1]);
