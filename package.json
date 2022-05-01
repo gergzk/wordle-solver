@@ -1,5 +1,5 @@
 {
-  "name": "boggle-solver",
+  "name": "wordle-solver",
   "version": "1.0.0",
   "description": "Finds words on a boggle board. You can provide your dictionary and board, though default 4x4 and english words are provided.",
   "main": "index.js",
