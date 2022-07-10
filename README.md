@@ -1,2 +1,2 @@
-# boggle-solver
-A package to solve generalized boggle boards
+# wordle-solver
+A package of tools to solve wordle. 
